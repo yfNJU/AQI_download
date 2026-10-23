@@ -4,6 +4,10 @@
 
 程序仅使用 Python 3.12 标准库，无需安装第三方依赖。数据来自网站公开接口，接口当前未要求登录。接口地址、字段及可用时间范围可能发生变化。
 
+**部署状态（2026-10-24，北京时间）：本地全量采集和仓库写回验证通过，但测试过的 GitHub 托管 Ubuntu、Windows Runner 均无法连接源站18007端口。定时配置已经上传，尚不能视为自动采集成功上线。仓库中的首次观测数据来自成功的本地采集，不是托管 Runner 的采集结果。**
+
+两个环境都能解析到 `106.37.208.234`，但 TCP 连接超时；本地对同一地址的 TCP、TLS及HTTP均正常。无法仅凭此确定具体网络限制原因。可核对 [Ubuntu 验证](https://github.com/yfNJU/AQI_download/actions/runs/39989876605)、[Windows 验证](https://github.com/yfNJU/AQI_download/actions/runs/39990288454)、[最新状态](status.json)及[连接诊断](network_diagnostics.json)。需要选用一台已验证可访问源站、且能定时在线的机器，才能完成自动运行部署。
+
 ## 定时运行
 
 GitHub Actions 每天 **08:37、20:37 UTC** 执行，前后间隔均为 **12 小时**，对应北京时间 **16:37、次日04:37**。
@@ -142,6 +146,8 @@ GitHub 调度延迟、仓库 Actions 停用或网络访问限制都可能造成�
 将程序、配置、测试、元数据和数据推送至本仓库 `main` 分支。工作流使用仓库自带的 `GITHUB_TOKEN`，无需提供网站账号或单独配置个人令牌。仓库/组织策略必须允许工作流运行及 `contents: write`。
 
 首次推送代码自动触发一次完整采集。以工作流实际成功和数据提交为准；本地运行成功不代表 GitHub Runner 的网络一定可访问该站点。后续定时任务运行在默认分支，因此请保持默认分支为 `main`。
+
+执行环境由仓库变量 `AQI_RUNNER` 指定，未设置时采用 `ubuntu-latest`。选择了确实可以访问源站的自托管 Runner 后，可以将此变量设为该 Runner 的专用标签；目前尚未注册或启用任何自托管 Runner。也可在已确认的机器上直接定时运行本程序，再同步数据到仓库。[GitHub 自托管 Runner 说明](https://docs.github.com/en/actions/concepts/runners/self-hosted-runners)
 
 ## 验证
 

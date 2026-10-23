@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   collect:
-    runs-on: windows-latest
+    runs-on: ${{ vars.AQI_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 75
     env:
       PYTHONDONTWRITEBYTECODE: '1'
