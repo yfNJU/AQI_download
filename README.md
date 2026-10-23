@@ -23,6 +23,7 @@ GitHub 没有公布足以确定“每日最低负载小时”的官方时间表�
 
 ```text
 collect.py                     采集、校验、合并及站点历史逻辑
+diagnose_network.py            连接失败时的 DNS、TCP、TLS 诊断
 config.json                    请求速率、重试和归档年份
 tests/test_collect.py          离线测试
 .github/workflows/collect.yml  定时任务
@@ -34,6 +35,7 @@ state.json                     首次基准、最新状态及结构化变更历�
   4166A_2026.txt
 last_run.json                  最新运行报告，不提交到 Git
 status.json                    最新 GitHub 采集结果，自动提交供直接查看
+network_diagnostics.json       最近一次失败后的源站连接诊断（如有）
 ```
 
 不要删除 `state.json`、`stations_initial.csv` 或 `stations.csv` 来清理年度观测数据。它们用于跨年延续站点身份和变更历史。
@@ -115,6 +117,8 @@ change name to 新站名 on 26.10.24; change name to 后续站名 on 27.03.02
 默认三个工作线程共享速率限制，所有请求（包括重试）的启动间隔至少0.5秒，即总体不超过每秒两次。超时20秒，最多三次尝试；对临时网络错误、429和部分5xx进行退避，对403等错误直接报错。不会关闭 TLS 证书验证。
 
 单站失败后继续处理其他站点；最初20个完成请求均失败时停止，避免网站不可用时继续请求全国站点。站点总数比上次下降超过20%时停止元数据更新，防止错误响应把大量站点标为消失；确认来源确有变化后可手动加 `--allow-large-drop`。
+
+远端采集失败时，会对源站 DNS 解析出的至多两个地址检查 TCP、TLS 和首页 HTTP 响应，并将结果保存为 `network_diagnostics.json`。它只检查源站18007端口，保持证书验证，不扫描其他主机或端口。诊断文件表示其 `checked_utc` 时刻的结果，成功运行不会将旧诊断改写为当前错误。
 
 同一输出目录禁止同时运行两次。正常结束会清理 `.run.lock`；若程序被强制终止，只能在确认没有运行进程后手动删除残留锁。GitHub 工作流另外使用并发组串行执行。
 

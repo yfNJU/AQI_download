@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - 'collect.py'
+      - 'diagnose_network.py'
       - 'config.json'
       - 'tests/**'
       - '.github/workflows/collect.yml'
@@ -40,6 +41,10 @@ jobs:
         id: collect
         continue-on-error: true
         run: python -B collect.py
+      - name: Diagnose source connection on failure
+        if: ${{ !cancelled() && steps.collect.outcome == 'failure' }}
+        continue-on-error: true
+        run: python -B diagnose_network.py --output network_diagnostics.json
       - name: Save successful station updates
         if: ${{ !cancelled() && steps.collect.outcome != 'skipped' }}
         shell: bash
