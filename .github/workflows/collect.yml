@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   collect:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 75
     env:
       PYTHONDONTWRITEBYTECODE: '1'
