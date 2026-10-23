@@ -1,0 +1,14 @@
+{
+  "checked_utc": "2026-10-23T16:50:04.773037+00:00",
+  "host": "air.cnemc.cn",
+  "port": 18007,
+  "addresses": [
+    {
+      "address": "106.37.208.234",
+      "family": "IPv4",
+      "failed_stage": "tcp",
+      "error": "timed out",
+      "elapsed_seconds": 8.0
+    }
+  ]
+}
