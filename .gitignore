@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.tmp
+.run.lock
+last_run.json
+validation_report.json
+TASK_INVENTORY.md

@@ -1,0 +1,8 @@
+{
+  "request_interval_seconds": 0.5,
+  "workers": 3,
+  "timeout_seconds": 20,
+  "attempts": 3,
+  "max_data_age_hours": 6,
+  "archived_years": []
+}
